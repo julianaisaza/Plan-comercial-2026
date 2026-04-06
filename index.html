@@ -37,6 +37,9 @@
     .progress-bar { transition: width 0.9s cubic-bezier(0.4,0,0.2,1); }
     .card { background: var(--tg-card); border: 1px solid var(--tg-border); border-radius: 16px; box-shadow: 0 1px 4px rgba(28,58,82,0.07); }
     .task-row:hover td { background: #F7F4EE !important; }
+    .task-row:hover .delete-btn { opacity: 1 !important; }
+    .delete-btn { opacity: 0; transition: opacity 0.15s; background: none; border: none; cursor: pointer; color: #C0392B; font-size: 15px; padding: 2px 5px; border-radius: 5px; line-height: 1; }
+    .delete-btn:hover { background: rgba(192,57,43,0.1); }
     input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.4; cursor: pointer; }
     select option { background: #fff; color: var(--tg-text); }
     .nav-tab { padding: 6px 16px; border-radius: 10px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; border: none; background: transparent; }
@@ -355,9 +358,17 @@ create policy "Allow all on tasks" on public.tasks for all using (true) with che
     }
 
     /* ── TASK ROW ── */
-    function TaskRow({ task, index, updateTask }) {
+    function TaskRow({ task, index, updateTask, deleteTask }) {
       const [obs,setObs]=useState(task.observations||'');
+      const [confirming,setConfirming]=useState(false);
       const done=task.status==='Completado';
+
+      function handleDelete(e){
+        e.stopPropagation();
+        if(confirming){ deleteTask(task.id); }
+        else{ setConfirming(true); setTimeout(()=>setConfirming(false),3000); }
+      }
+
       return (
         <tr className="task-row">
           <td style={{padding:'10px 12px',color:C.soft,fontSize:11,fontFamily:'monospace',textAlign:'center',width:36}}>{index+1}</td>
@@ -382,6 +393,14 @@ create policy "Allow all on tasks" on public.tasks for all using (true) with che
             <input className="input-inline" placeholder="Agregar nota…" value={obs}
               onChange={e=>setObs(e.target.value)}
               onBlur={()=>{if(obs!==(task.observations||''))updateTask(task.id,{observations:obs});}}/>
+          </td>
+          <td style={{padding:'10px 8px',width:60,textAlign:'center'}}>
+            <button className="delete-btn" onClick={handleDelete}
+              title={confirming?'Clic de nuevo para confirmar':'Eliminar actividad'}
+              style={{opacity:confirming?1:undefined,color:confirming?'#C0392B':undefined,
+                background:confirming?'rgba(192,57,43,0.1)':undefined,fontWeight:confirming?700:undefined}}>
+              {confirming?'✓?':'🗑'}
+            </button>
           </td>
         </tr>
       );
@@ -419,7 +438,7 @@ create policy "Allow all on tasks" on public.tasks for all using (true) with che
     }
 
     /* ── PROJECT SECTION ── */
-    function ProjectSection({ project, tasks, progress, updateTask, addTask }) {
+    function ProjectSection({ project, tasks, progress, updateTask, addTask, deleteTask }) {
       const [open,setOpen]=useState(true);
       const done=tasks.filter(t=>t.status==='Completado').length;
       const inProg=tasks.filter(t=>t.status==='En proceso').length;
@@ -450,13 +469,13 @@ create policy "Allow all on tasks" on public.tasks for all using (true) with che
               <table style={{width:'100%',minWidth:760,borderCollapse:'collapse'}}>
                 <thead>
                   <tr style={{background:'#F7F4EE'}}>
-                    {['#','ACTIVIDAD','ESTADO','RESPONSABLE','FECHA PROGRAMADA','OBSERVACIONES'].map(h=>(
+                    {['#','ACTIVIDAD','ESTADO','RESPONSABLE','FECHA PROGRAMADA','OBSERVACIONES',''].map(h=>(
                       <th key={h} style={{padding:'10px 12px',textAlign:'left',fontSize:10,fontWeight:700,letterSpacing:'0.5px',color:C.mid,textTransform:'uppercase',whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`}}>{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {tasks.map((t,i)=><TaskRow key={t.id} task={t} index={i} updateTask={updateTask}/>)}
+                  {tasks.map((t,i)=><TaskRow key={t.id} task={t} index={i} updateTask={updateTask} deleteTask={deleteTask}/>)}
                   <AddTaskRow projectId={project.id} maxOrderIndex={maxOi} onAdd={addTask}/>
                 </tbody>
               </table>
@@ -467,7 +486,7 @@ create policy "Allow all on tasks" on public.tasks for all using (true) with che
     }
 
     /* ── TASKS VIEW ── */
-    function TasksView({ projects, tasks, updateTask, addTask, getProgress, getProjTasks, onOpenTeam }) {
+    function TasksView({ projects, tasks, updateTask, addTask, deleteTask, getProgress, getProjTasks, onOpenTeam }) {
       const [search,setSearch]=useState('');
       const [filter,setFilter]=useState('Todos');
       const visible=useMemo(()=>
@@ -512,7 +531,7 @@ create policy "Allow all on tasks" on public.tasks for all using (true) with che
           {visible.length===0
             ? <div className="card" style={{padding:48,textAlign:'center'}}><div style={{fontSize:40,marginBottom:10}}>🔎</div><div style={{color:C.soft}}>No hay resultados</div></div>
             : visible.map(({p,t,ft})=>(
-              <ProjectSection key={p.id} project={p} tasks={filter==='Todos'?t:ft} progress={getProgress(p.id)} updateTask={updateTask} addTask={addTask}/>
+              <ProjectSection key={p.id} project={p} tasks={filter==='Todos'?t:ft} progress={getProgress(p.id)} updateTask={updateTask} addTask={addTask} deleteTask={deleteTask}/>
             ))
           }
         </div>
@@ -615,6 +634,12 @@ create policy "Allow all on tasks" on public.tasks for all using (true) with che
         if(!error&&data) setTasks(prev=>[...prev,data]);
       }
 
+      async function deleteTask(id){
+        setTasks(prev=>prev.filter(t=>t.id!==id));
+        const client=getClient();
+        if(client) await client.from('tasks').delete().eq('id',id);
+      }
+
       const getProjTasks=id=>tasks.filter(t=>t.project_id===id).sort((a,b)=>(a.order_index||0)-(b.order_index||0));
       const getProgress=id=>{ const t=getProjTasks(id); return t.length?Math.round(t.filter(x=>x.status==='Completado').length/t.length*100):0; };
       const total=tasks.length,done=tasks.filter(t=>t.status==='Completado').length;
@@ -646,7 +671,7 @@ create policy "Allow all on tasks" on public.tasks for all using (true) with che
           <div style={{maxWidth:1400,margin:'0 auto',padding:'0 24px'}}>
             {view==='dashboard'
               ?<Dashboard projects={projects} tasks={tasks} getProgress={getProgress} getProjTasks={getProjTasks} setView={setView}/>
-              :<TasksView projects={projects} tasks={tasks} updateTask={updateTask} addTask={addTask} getProgress={getProgress} getProjTasks={getProjTasks} onOpenTeam={()=>setTeamOpen(true)}/>
+              :<TasksView projects={projects} tasks={tasks} updateTask={updateTask} addTask={addTask} deleteTask={deleteTask} getProgress={getProgress} getProjTasks={getProjTasks} onOpenTeam={()=>setTeamOpen(true)}/>
             }
           </div>
         </>
