@@ -99,8 +99,6 @@
     ];
 
     const DEFAULT_TEAM = ['Juliana','Valentina','Andrés','María','Carlos'];
-    function getTeam() { try { const s=localStorage.getItem('tg_team'); return s?JSON.parse(s):DEFAULT_TEAM; } catch{return DEFAULT_TEAM;} }
-    function saveTeam(a) { localStorage.setItem('tg_team',JSON.stringify(a)); }
 
     /* ── CREDENCIALES SUPABASE (hardcoded para todos los usuarios) ──
        Pega aquí tu Project URL y tu Anon/Publishable Key una sola vez.
@@ -124,11 +122,16 @@
     function pctColor(p){ if(p===100)return C.green; if(p>=60)return '#2E8B57'; if(p>=30)return '#D97706'; return '#C0392B'; }
 
     /* ── TEAM MODAL ── */
-    function TeamModal({ onClose }) {
-      const [team,setTeam]=useState(getTeam());
+    function TeamModal({ onClose, team, addMember, removeMember }) {
       const [input,setInput]=useState('');
-      function add(){ const n=input.trim(); if(!n||team.includes(n))return; const nx=[...team,n]; setTeam(nx);saveTeam(nx);setInput(''); }
-      function remove(name){ const nx=team.filter(x=>x!==name); setTeam(nx);saveTeam(nx); }
+      const [saving,setSaving]=useState(false);
+      async function add(){
+        const n=input.trim();
+        if(!n||team.some(m=>m.name===n))return;
+        setSaving(true);
+        await addMember(n);
+        setInput(''); setSaving(false);
+      }
       return (
         <div className="team-overlay" onClick={e=>e.target===e.currentTarget&&onClose()}>
           <div className="team-modal fade-in">
@@ -136,20 +139,20 @@
               <h2 style={{fontSize:18,fontWeight:800,color:C.blue}}>Gestionar Equipo</h2>
               <button onClick={onClose} style={{background:'none',border:'none',fontSize:22,cursor:'pointer',color:C.soft}}>✕</button>
             </div>
-            <p style={{fontSize:13,color:C.mid,marginBottom:18,lineHeight:1.6}}>Agrega o elimina responsables. Aparecerán en el desplegable de cada actividad.</p>
+            <p style={{fontSize:13,color:C.mid,marginBottom:18,lineHeight:1.6}}>Agrega o elimina responsables. Los cambios se sincronizan para todos.</p>
             <div style={{display:'flex',gap:8,marginBottom:20}}>
               <input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==='Enter'&&add()}
                 placeholder="Nombre del responsable…"
                 style={{flex:1,background:'#F7F4EE',border:`1px solid ${C.border}`,borderRadius:8,padding:'9px 14px',fontSize:13,color:C.text,outline:'none',fontFamily:'inherit'}}/>
-              <button className="btn-green" onClick={add}>Agregar</button>
+              <button className="btn-green" onClick={add} disabled={saving}>{saving?'…':'Agregar'}</button>
             </div>
             <div style={{display:'flex',flexWrap:'wrap',gap:8,minHeight:36}}>
               {team.length===0
                 ? <p style={{color:C.soft,fontSize:13}}>No hay responsables aún.</p>
-                : team.map(name=>(
-                  <span key={name} className="tag-chip">
-                    {name}
-                    <button onClick={()=>remove(name)} title="Eliminar">×</button>
+                : team.map(m=>(
+                  <span key={m.id} className="tag-chip">
+                    {m.name}
+                    <button onClick={()=>removeMember(m.id)} title="Eliminar">×</button>
                   </span>
                 ))}
             </div>
@@ -200,7 +203,15 @@ create table if not exists public.tasks (
 alter table public.projects enable row level security;
 alter table public.tasks enable row level security;
 create policy "Allow all on projects" on public.projects for all using (true) with check (true);
-create policy "Allow all on tasks" on public.tasks for all using (true) with check (true);`;
+create policy "Allow all on tasks" on public.tasks for all using (true) with check (true);
+
+create table if not exists public.team_members (
+  id bigserial primary key,
+  name text not null unique,
+  created_at timestamptz not null default now()
+);
+alter table public.team_members enable row level security;
+create policy "Allow all on team_members" on public.team_members for all using (true) with check (true);`;
       return (
         <div style={{position:'fixed',inset:0,background:'rgba(28,58,82,0.65)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:20}}>
           <div className="card fade-in" style={{maxWidth:520,width:'100%',padding:36,maxHeight:'90vh',overflowY:'auto'}}>
@@ -357,20 +368,18 @@ create policy "Allow all on tasks" on public.tasks for all using (true) with che
     }
 
     /* ── RESPONSIBLE SELECT ── */
-    function ResponsibleSelect({ value, onChange }) {
-      const [team,setTeamLocal]=useState(getTeam());
-      useEffect(()=>{ setTeamLocal(getTeam()); },[]);
+    function ResponsibleSelect({ value, onChange, team }) {
       return (
         <select value={value||''} onChange={e=>onChange(e.target.value||null)} className="resp-select"
           style={{color:value?C.text:C.soft}}>
           <option value="">— Asignar —</option>
-          {team.map(name=><option key={name} value={name}>{name}</option>)}
+          {(team||[]).map(m=><option key={m.id} value={m.name}>{m.name}</option>)}
         </select>
       );
     }
 
     /* ── TASK ROW ── */
-    function TaskRow({ task, index, updateTask, deleteTask }) {
+    function TaskRow({ task, index, updateTask, deleteTask, team }) {
       const [obs,setObs]=useState(task.observations||'');
       const [confirming,setConfirming]=useState(false);
       const done=task.status==='Completado';
@@ -394,7 +403,7 @@ create policy "Allow all on tasks" on public.tasks for all using (true) with che
             <StatusSelect value={task.status} onChange={v=>updateTask(task.id,{status:v})}/>
           </td>
           <td style={{padding:'10px 8px',minWidth:145}}>
-            <ResponsibleSelect value={task.responsible} onChange={v=>updateTask(task.id,{responsible:v})}/>
+            <ResponsibleSelect value={task.responsible} onChange={v=>updateTask(task.id,{responsible:v})} team={team}/>
           </td>
           <td style={{padding:'10px 8px',minWidth:145}}>
             <input type="date" className="input-inline" style={{fontSize:12}}
@@ -450,7 +459,7 @@ create policy "Allow all on tasks" on public.tasks for all using (true) with che
     }
 
     /* ── PROJECT SECTION ── */
-    function ProjectSection({ project, tasks, progress, updateTask, addTask, deleteTask }) {
+    function ProjectSection({ project, tasks, progress, updateTask, addTask, deleteTask, team }) {
       const [open,setOpen]=useState(true);
       const done=tasks.filter(t=>t.status==='Completado').length;
       const inProg=tasks.filter(t=>t.status==='En proceso').length;
@@ -487,7 +496,7 @@ create policy "Allow all on tasks" on public.tasks for all using (true) with che
                   </tr>
                 </thead>
                 <tbody>
-                  {tasks.map((t,i)=><TaskRow key={t.id} task={t} index={i} updateTask={updateTask} deleteTask={deleteTask}/>)}
+                  {tasks.map((t,i)=><TaskRow key={t.id} task={t} index={i} updateTask={updateTask} deleteTask={deleteTask} team={team}/>)}
                   <AddTaskRow projectId={project.id} maxOrderIndex={maxOi} onAdd={addTask}/>
                 </tbody>
               </table>
@@ -498,7 +507,7 @@ create policy "Allow all on tasks" on public.tasks for all using (true) with che
     }
 
     /* ── TASKS VIEW ── */
-    function TasksView({ projects, tasks, updateTask, addTask, deleteTask, getProgress, getProjTasks, onOpenTeam }) {
+    function TasksView({ projects, tasks, updateTask, addTask, deleteTask, team, getProgress, getProjTasks, onOpenTeam }) {
       const [search,setSearch]=useState('');
       const [filter,setFilter]=useState('Todos');
       const visible=useMemo(()=>
@@ -543,7 +552,7 @@ create policy "Allow all on tasks" on public.tasks for all using (true) with che
           {visible.length===0
             ? <div className="card" style={{padding:48,textAlign:'center'}}><div style={{fontSize:40,marginBottom:10}}>🔎</div><div style={{color:C.soft}}>No hay resultados</div></div>
             : visible.map(({p,t,ft})=>(
-              <ProjectSection key={p.id} project={p} tasks={filter==='Todos'?t:ft} progress={getProgress(p.id)} updateTask={updateTask} addTask={addTask} deleteTask={deleteTask}/>
+              <ProjectSection key={p.id} project={p} tasks={filter==='Todos'?t:ft} progress={getProgress(p.id)} updateTask={updateTask} addTask={addTask} deleteTask={deleteTask} team={team}/>
             ))
           }
         </div>
@@ -586,6 +595,7 @@ create policy "Allow all on tasks" on public.tasks for all using (true) with che
       const [view,setView]=useState('dashboard');
       const [projects,setProjects]=useState([]);
       const [tasks,setTasks]=useState([]);
+      const [team,setTeam]=useState([]);
       const [loading,setLoading]=useState(true);
       const [error,setError]=useState(null);
       const [setup,setSetup]=useState(false);
@@ -596,13 +606,15 @@ create policy "Allow all on tasks" on public.tasks for all using (true) with che
         const client=getClient();
         if(!client){setLoading(false);setSetup(true);return;}
         try{
-          const [{data:ps,error:e1},{data:ts,error:e2}]=await Promise.all([
+          const [{data:ps,error:e1},{data:ts,error:e2},{data:tm,error:e3}]=await Promise.all([
             client.from('projects').select('*').order('order_index'),
             client.from('tasks').select('*').order('order_index'),
+            client.from('team_members').select('*').order('name'),
           ]);
           if(e1)throw e1; if(e2)throw e2;
           if(!ps?.length){await seedDB(client);return;}
           setProjects(ps); setTasks(ts||[]);
+          setTeam(tm||[]);
         }catch(e){setError(e.message);}
         finally{setLoading(false);}
       },[]);
@@ -616,6 +628,8 @@ create policy "Allow all on tasks" on public.tasks for all using (true) with che
             const{error:e2}=await client.from('tasks').insert(proj.tasks.map((name,i)=>({project_id:p.id,name,status:'Sin iniciar',order_index:i})));
             if(e2)throw e2;
           }
+          // Seed equipo por defecto
+          await client.from('team_members').insert(DEFAULT_TEAM.map(name=>({name})));
         }catch(e){setError('Error inicializando: '+e.message);}
         finally{setSeeding(false);loadData();}
       }
@@ -624,12 +638,17 @@ create policy "Allow all on tasks" on public.tasks for all using (true) with che
         loadData();
         const client=getClient();
         if(!client)return;
-        const ch=client.channel('rt-tasks')
+        const ch=client.channel('rt-all')
           .on('postgres_changes',{event:'*',schema:'public',table:'tasks'},payload=>{
             if(payload.eventType==='INSERT') setTasks(prev=>[...prev,payload.new]);
             else if(payload.eventType==='UPDATE') setTasks(prev=>prev.map(t=>t.id===payload.new.id?payload.new:t));
             else if(payload.eventType==='DELETE') setTasks(prev=>prev.filter(t=>t.id!==payload.old.id));
-          }).subscribe();
+          })
+          .on('postgres_changes',{event:'*',schema:'public',table:'team_members'},payload=>{
+            if(payload.eventType==='INSERT') setTeam(prev=>[...prev,payload.new].sort((a,b)=>a.name.localeCompare(b.name)));
+            else if(payload.eventType==='DELETE') setTeam(prev=>prev.filter(m=>m.id!==payload.old.id));
+          })
+          .subscribe();
         return()=>client.removeChannel(ch);
       },[]);
 
@@ -650,6 +669,18 @@ create policy "Allow all on tasks" on public.tasks for all using (true) with che
         setTasks(prev=>prev.filter(t=>t.id!==id));
         const client=getClient();
         if(client) await client.from('tasks').delete().eq('id',id);
+      }
+
+      async function addMember(name){
+        const client=getClient(); if(!client)return;
+        const{data,error}=await client.from('team_members').insert({name}).select().single();
+        if(!error&&data) setTeam(prev=>[...prev,data].sort((a,b)=>a.name.localeCompare(b.name)));
+      }
+
+      async function removeMember(id){
+        setTeam(prev=>prev.filter(m=>m.id!==id));
+        const client=getClient();
+        if(client) await client.from('team_members').delete().eq('id',id);
       }
 
       const getProjTasks=id=>tasks.filter(t=>t.project_id===id).sort((a,b)=>(a.order_index||0)-(b.order_index||0));
@@ -678,12 +709,12 @@ create policy "Allow all on tasks" on public.tasks for all using (true) with che
       return (
         <>
           {setup&&<SetupModal onSave={()=>{setSetup(false);setLoading(true);loadData();}}/>}
-          {teamOpen&&<TeamModal onClose={()=>setTeamOpen(false)}/>}
+          {teamOpen&&<TeamModal onClose={()=>setTeamOpen(false)} team={team} addMember={addMember} removeMember={removeMember}/>}
           <Navbar view={view} setView={setView} globalPct={globalPct} done={done} total={total} onConfig={()=>setSetup(true)}/>
           <div style={{maxWidth:1400,margin:'0 auto',padding:'0 24px'}}>
             {view==='dashboard'
               ?<Dashboard projects={projects} tasks={tasks} getProgress={getProgress} getProjTasks={getProjTasks} setView={setView}/>
-              :<TasksView projects={projects} tasks={tasks} updateTask={updateTask} addTask={addTask} deleteTask={deleteTask} getProgress={getProgress} getProjTasks={getProjTasks} onOpenTeam={()=>setTeamOpen(true)}/>
+              :<TasksView projects={projects} tasks={tasks} updateTask={updateTask} addTask={addTask} deleteTask={deleteTask} team={team} getProgress={getProgress} getProjTasks={getProjTasks} onOpenTeam={()=>setTeamOpen(true)}/>
             }
           </div>
         </>
