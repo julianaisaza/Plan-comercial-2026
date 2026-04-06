@@ -102,9 +102,21 @@
     function getTeam() { try { const s=localStorage.getItem('tg_team'); return s?JSON.parse(s):DEFAULT_TEAM; } catch{return DEFAULT_TEAM;} }
     function saveTeam(a) { localStorage.setItem('tg_team',JSON.stringify(a)); }
 
+    /* ── CREDENCIALES SUPABASE (hardcoded para todos los usuarios) ──
+       Pega aquí tu Project URL y tu Anon/Publishable Key una sola vez.
+       Mientras estén completas, nadie verá el modal de configuración.     */
+    const SUPABASE_URL = 'https://kxfpvevlbiavjeejklgm.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4ZnB2ZXZsYmlhdmplZWprbGdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1NTYwNzAsImV4cCI6MjA5MDEzMjA3MH0.y6lO_LJr_TB7AjQN5Hgo71XSQ-o6lbdyasxG0fSGSXc';
+
     let sbClient = null;
     function getClient() {
       if (sbClient) return sbClient;
+      // Prioridad 1: credenciales hardcoded en el código
+      if (SUPABASE_URL && SUPABASE_KEY) {
+        sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        return sbClient;
+      }
+      // Prioridad 2: credenciales guardadas en localStorage (fallback)
       const url=localStorage.getItem('sb_url'), key=localStorage.getItem('sb_key');
       if (url && key) sbClient=supabase.createClient(url,key);
       return sbClient;
