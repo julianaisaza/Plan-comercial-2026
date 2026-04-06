@@ -12,46 +12,71 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --tg-blue:        #1C3A52;
+      --tg-green:       #006B6B;
+      --tg-light-green: #C8D5C8;
+      --tg-beige:       #F0EBE2;
+      --tg-card:        #FFFFFF;
+      --tg-beige-mid:   #E8E2D8;
+      --tg-text:        #1A2E3B;
+      --tg-mid:         #4A6070;
+      --tg-soft:        #8A9EAD;
+      --tg-border:      #DDD8CF;
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #0D1117; color: #E6EDF3; font-family: 'Inter', system-ui, sans-serif; min-height: 100vh; }
-    ::-webkit-scrollbar { width: 5px; height: 5px; }
-    ::-webkit-scrollbar-track { background: #0D1117; }
-    ::-webkit-scrollbar-thumb { background: #30363D; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #484F58; }
+    body { background: var(--tg-beige); color: var(--tg-text); font-family: 'Inter', system-ui, sans-serif; min-height: 100vh; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--tg-beige); }
+    ::-webkit-scrollbar-thumb { background: var(--tg-light-green); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--tg-green); }
     @keyframes spin { to { transform: rotate(360deg); } }
     .spinner { animation: spin 0.8s linear infinite; }
     @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
     .fade-in { animation: fadeIn 0.3s ease; }
     .progress-bar { transition: width 0.9s cubic-bezier(0.4,0,0.2,1); }
-    .card { background: #161B22; border: 1px solid #30363D; border-radius: 16px; }
-    .task-row:hover td { background: #1C2128 !important; }
-    input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.5); cursor: pointer; }
-    select option { background: #161B22; color: #E6EDF3; }
+    .card { background: var(--tg-card); border: 1px solid var(--tg-border); border-radius: 16px; box-shadow: 0 1px 4px rgba(28,58,82,0.07); }
+    .task-row:hover td { background: #F7F4EE !important; }
+    input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.4; cursor: pointer; }
+    select option { background: #fff; color: var(--tg-text); }
     .nav-tab { padding: 6px 16px; border-radius: 10px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; border: none; background: transparent; }
-    .nav-tab.active { background: #E94560; color: white; }
-    .nav-tab:not(.active) { color: #8B949E; }
-    .nav-tab:not(.active):hover { color: #E6EDF3; }
-    .status-pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; border: none; cursor: pointer; white-space: nowrap; }
-    .status-sin { background: rgba(75,85,99,0.3); color: #9CA3AF; }
-    .status-en  { background: rgba(245,158,11,0.15); color: #FBBF24; }
-    .status-ok  { background: rgba(39,174,96,0.15); color: #4ADE80; }
-    .input-inline { background: transparent; border: none; color: #E6EDF3; font-size: 13px; font-family: inherit; width: 100%; outline: none; padding: 3px 6px; border-radius: 6px; }
-    .input-inline:focus { background: #21262D; }
-    .input-inline::placeholder { color: #484F58; }
+    .nav-tab.active { background: var(--tg-blue); color: white; }
+    .nav-tab:not(.active) { color: var(--tg-mid); }
+    .nav-tab:not(.active):hover { color: var(--tg-blue); }
+    .status-pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; border: none; cursor: pointer; white-space: nowrap; appearance: none; -webkit-appearance: none; }
+    .status-sin { background: rgba(138,158,173,0.15); color: #5A7080; }
+    .status-en  { background: rgba(217,119,6,0.12);  color: #B45309; }
+    .status-ok  { background: rgba(0,107,107,0.14);  color: #006B6B; }
+    .input-inline { background: transparent; border: none; color: var(--tg-text); font-size: 13px; font-family: inherit; width: 100%; outline: none; padding: 3px 6px; border-radius: 6px; }
+    .input-inline:focus { background: var(--tg-beige); }
+    .input-inline::placeholder { color: var(--tg-soft); }
     .project-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; cursor: pointer; transition: background 0.15s; }
-    .project-header:hover { background: rgba(255,255,255,0.03); }
-    .btn-primary { background: #E94560; color: white; border: none; padding: 10px 22px; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; transition: opacity 0.15s; }
+    .project-header:hover { background: rgba(200,213,200,0.2); }
+    .btn-primary { background: var(--tg-blue); color: white; border: none; padding: 10px 22px; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; transition: opacity 0.15s; }
     .btn-primary:hover { opacity: 0.85; }
-    .stat-card { background: #161B22; border: 1px solid #30363D; border-radius: 14px; padding: 18px 20px; display: flex; align-items: center; gap: 14px; }
+    .btn-green { background: var(--tg-green); color: white; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; transition: opacity 0.15s; }
+    .btn-green:hover { opacity: 0.85; }
+    .stat-card { background: var(--tg-card); border: 1px solid var(--tg-border); border-radius: 14px; padding: 18px 20px; display: flex; align-items: center; gap: 14px; box-shadow: 0 1px 4px rgba(28,58,82,0.06); }
+    .resp-select { background: transparent; border: none; color: var(--tg-text); font-size: 13px; font-family: inherit; width: 100%; outline: none; padding: 3px 6px; border-radius: 6px; cursor: pointer; appearance: none; -webkit-appearance: none; }
+    .resp-select:focus { background: var(--tg-beige); }
+    .team-overlay { position: fixed; inset: 0; background: rgba(28,58,82,0.5); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 20px; }
+    .team-modal { background: #fff; border-radius: 20px; padding: 32px; max-width: 420px; width: 100%; box-shadow: 0 20px 60px rgba(28,58,82,0.2); }
+    .tag-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--tg-beige); border: 1px solid var(--tg-border); border-radius: 20px; padding: 4px 12px; font-size: 13px; font-weight: 500; color: var(--tg-text); }
+    .tag-chip button { background: none; border: none; cursor: pointer; color: var(--tg-soft); font-size: 16px; line-height: 1; padding: 0; display: flex; }
+    .tag-chip button:hover { color: #c0392b; }
+    .add-row-cell { padding: 10px 16px; border-top: 1px dashed var(--tg-border); }
   </style>
 </head>
 <body>
   <div id="root"></div>
-
   <script type="text/babel">
-    const { useState, useEffect, useCallback, useMemo } = React;
+    const { useState, useEffect, useCallback, useMemo, useRef } = React;
 
-    /* ── INITIAL DATA ── */
+    const C = {
+      blue:'#1C3A52', green:'#006B6B', lg:'#C8D5C8',
+      beige:'#F0EBE2', mid:'#4A6070', soft:'#8A9EAD', border:'#DDD8CF', text:'#1A2E3B'
+    };
+
     const INITIAL_PROJECTS = [
       { name:'MARCA', icon:'🎨', order_index:1, tasks:['Ejecutar ADN de marca','Sesiones de fotos (modelos y obra)','Pauta de seguidores'] },
       { name:'CLIENTES AL EXTERIOR', icon:'🌎', order_index:2, tasks:['Documentos descargables para captación de bases de datos','Evento de capacitaciones virtuales','Feria internacional','Detalles clientes etapa inicial y cierre de negocio','Experiencia de atención'] },
@@ -70,75 +95,125 @@
       { name:'ENTREGAS', icon:'🔑', order_index:15, tasks:['Camino Verde: torre 3','Camino Verde: torre 4','Country: entregas 1A','Country: entregas 1B','Mágica 3A'] },
     ];
 
-    /* ── SUPABASE ── */
+    const DEFAULT_TEAM = ['Juliana','Valentina','Andrés','María','Carlos'];
+    function getTeam() { try { const s=localStorage.getItem('tg_team'); return s?JSON.parse(s):DEFAULT_TEAM; } catch{return DEFAULT_TEAM;} }
+    function saveTeam(a) { localStorage.setItem('tg_team',JSON.stringify(a)); }
+
     let sbClient = null;
     function getClient() {
       if (sbClient) return sbClient;
-      const url = localStorage.getItem('sb_url');
-      const key = localStorage.getItem('sb_key');
-      if (url && key) sbClient = supabase.createClient(url, key);
+      const url=localStorage.getItem('sb_url'), key=localStorage.getItem('sb_key');
+      if (url && key) sbClient=supabase.createClient(url,key);
       return sbClient;
     }
+    function pctColor(p){ if(p===100)return C.green; if(p>=60)return '#2E8B57'; if(p>=30)return '#D97706'; return '#C0392B'; }
 
-    function pctColor(p) {
-      if (p === 100) return '#4ADE80';
-      if (p >= 60)  return '#27AE60';
-      if (p >= 30)  return '#FBBF24';
-      return '#E94560';
+    /* ── TEAM MODAL ── */
+    function TeamModal({ onClose }) {
+      const [team,setTeam]=useState(getTeam());
+      const [input,setInput]=useState('');
+      function add(){ const n=input.trim(); if(!n||team.includes(n))return; const nx=[...team,n]; setTeam(nx);saveTeam(nx);setInput(''); }
+      function remove(name){ const nx=team.filter(x=>x!==name); setTeam(nx);saveTeam(nx); }
+      return (
+        <div className="team-overlay" onClick={e=>e.target===e.currentTarget&&onClose()}>
+          <div className="team-modal fade-in">
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:20}}>
+              <h2 style={{fontSize:18,fontWeight:800,color:C.blue}}>Gestionar Equipo</h2>
+              <button onClick={onClose} style={{background:'none',border:'none',fontSize:22,cursor:'pointer',color:C.soft}}>✕</button>
+            </div>
+            <p style={{fontSize:13,color:C.mid,marginBottom:18,lineHeight:1.6}}>Agrega o elimina responsables. Aparecerán en el desplegable de cada actividad.</p>
+            <div style={{display:'flex',gap:8,marginBottom:20}}>
+              <input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==='Enter'&&add()}
+                placeholder="Nombre del responsable…"
+                style={{flex:1,background:'#F7F4EE',border:`1px solid ${C.border}`,borderRadius:8,padding:'9px 14px',fontSize:13,color:C.text,outline:'none',fontFamily:'inherit'}}/>
+              <button className="btn-green" onClick={add}>Agregar</button>
+            </div>
+            <div style={{display:'flex',flexWrap:'wrap',gap:8,minHeight:36}}>
+              {team.length===0
+                ? <p style={{color:C.soft,fontSize:13}}>No hay responsables aún.</p>
+                : team.map(name=>(
+                  <span key={name} className="tag-chip">
+                    {name}
+                    <button onClick={()=>remove(name)} title="Eliminar">×</button>
+                  </span>
+                ))}
+            </div>
+            <button className="btn-primary" onClick={onClose} style={{marginTop:24,width:'100%'}}>Listo</button>
+          </div>
+        </div>
+      );
     }
 
     /* ── SETUP MODAL ── */
     function SetupModal({ onSave }) {
-      const [url, setUrl] = useState(localStorage.getItem('sb_url') || '');
-      const [key, setKey] = useState(localStorage.getItem('sb_key') || '');
-      const [err, setErr] = useState('');
-      const [loading, setLoading] = useState(false);
-
-      async function handle() {
-        if (!url.trim() || !key.trim()) return setErr('Completa ambos campos.');
-        setLoading(true); setErr('');
-        try {
-          const client = supabase.createClient(url.trim(), key.trim());
-          const { error } = await client.from('projects').select('id').limit(1);
-          if (error && !['PGRST116','42P01'].includes(error.code)) throw error;
-          localStorage.setItem('sb_url', url.trim());
-          localStorage.setItem('sb_key', key.trim());
-          sbClient = client;
-          onSave();
-        } catch(e) {
-          setErr('No se pudo conectar. Verifica las credenciales y que el schema esté ejecutado en Supabase.');
-        } finally { setLoading(false); }
+      const [url,setUrl]=useState(localStorage.getItem('sb_url')||'');
+      const [key,setKey]=useState(localStorage.getItem('sb_key')||'');
+      const [err,setErr]=useState('');
+      const [loading,setLoading]=useState(false);
+      async function handle(){
+        if(!url.trim()||!key.trim())return setErr('Completa ambos campos.');
+        setLoading(true);setErr('');
+        try{
+          const client=supabase.createClient(url.trim(),key.trim());
+          const{error}=await client.from('projects').select('id').limit(1);
+          if(error&&!['PGRST116','42P01'].includes(error.code))throw error;
+          localStorage.setItem('sb_url',url.trim());localStorage.setItem('sb_key',key.trim());
+          sbClient=client; onSave();
+        }catch(e){setErr('No se pudo conectar. Verifica las credenciales.');}
+        finally{setLoading(false);}
       }
-
+      const sqlSchema=`create table if not exists public.projects (
+  id bigserial primary key,
+  name text not null,
+  icon text not null default '📋',
+  order_index integer not null default 0,
+  created_at timestamptz not null default now()
+);
+create table if not exists public.tasks (
+  id bigserial primary key,
+  project_id bigint not null references public.projects(id) on delete cascade,
+  name text not null,
+  status text not null default 'Sin iniciar'
+    check (status in ('Sin iniciar','En proceso','Completado')),
+  responsible text,
+  scheduled_date date,
+  observations text,
+  order_index integer not null default 0,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+alter table public.projects enable row level security;
+alter table public.tasks enable row level security;
+create policy "Allow all on projects" on public.projects for all using (true) with check (true);
+create policy "Allow all on tasks" on public.tasks for all using (true) with check (true);`;
       return (
-        <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.85)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:20}}>
-          <div className="card fade-in" style={{maxWidth:500,width:'100%',padding:36}}>
+        <div style={{position:'fixed',inset:0,background:'rgba(28,58,82,0.65)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:20}}>
+          <div className="card fade-in" style={{maxWidth:520,width:'100%',padding:36,maxHeight:'90vh',overflowY:'auto'}}>
             <div style={{fontSize:44,textAlign:'center',marginBottom:12}}>🔌</div>
-            <h2 style={{fontSize:22,fontWeight:800,color:'#E6EDF3',textAlign:'center',marginBottom:6}}>Conectar Supabase</h2>
-            <p style={{color:'#8B949E',fontSize:13,textAlign:'center',lineHeight:1.6,marginBottom:28}}>
-              Para guardar los datos en línea necesitas un proyecto Supabase (gratis).<br/>
-              <a href="https://supabase.com" target="_blank" style={{color:'#E94560'}}>supabase.com</a>
-              {' '}→ New project → Settings → API
+            <h2 style={{fontSize:22,fontWeight:800,color:C.blue,textAlign:'center',marginBottom:6}}>Conectar Supabase</h2>
+            <p style={{color:C.mid,fontSize:13,textAlign:'center',lineHeight:1.6,marginBottom:28}}>
+              Para guardar los datos en línea necesitas un proyecto Supabase.<br/>
+              <a href="https://supabase.com" target="_blank" style={{color:C.green}}>supabase.com</a> → Project → Settings → API
             </p>
             <div style={{display:'flex',flexDirection:'column',gap:14}}>
-              {[['Project URL','sb_url_','https://xxxx.supabase.co',url,setUrl],['Anon Key','sb_key_','eyJhbGciOi...',key,setKey]].map(([label,,ph,val,set])=>(
+              {[['Project URL','https://xxxx.supabase.co',url,setUrl],['Anon / Publishable Key','eyJhbGciOi...',key,setKey]].map(([label,ph,val,set])=>(
                 <div key={label}>
-                  <label style={{fontSize:11,fontWeight:600,color:'#8B949E',textTransform:'uppercase',letterSpacing:'0.5px',display:'block',marginBottom:6}}>{label}</label>
+                  <label style={{fontSize:11,fontWeight:600,color:C.mid,textTransform:'uppercase',letterSpacing:'0.5px',display:'block',marginBottom:6}}>{label}</label>
                   <input value={val} onChange={e=>set(e.target.value)} placeholder={ph}
-                    style={{width:'100%',background:'#21262D',border:'1px solid #30363D',borderRadius:10,padding:'10px 14px',color:'#E6EDF3',fontSize:14,outline:'none',fontFamily:'inherit'}} />
+                    style={{width:'100%',background:'#F7F4EE',border:`1px solid ${C.border}`,borderRadius:10,padding:'10px 14px',color:C.text,fontSize:14,outline:'none',fontFamily:'inherit'}}/>
                 </div>
               ))}
-              {err && <p style={{color:'#E94560',fontSize:13}}>{err}</p>}
+              {err&&<p style={{color:'#C0392B',fontSize:13}}>{err}</p>}
               <button className="btn-primary" onClick={handle} disabled={loading} style={{marginTop:4,opacity:loading?0.6:1}}>
-                {loading ? 'Conectando...' : 'Conectar y empezar →'}
+                {loading?'Conectando...':'Conectar y empezar →'}
               </button>
               <details style={{marginTop:4}}>
-                <summary style={{color:'#8B949E',fontSize:12,cursor:'pointer'}}>¿Cómo crear el schema en Supabase?</summary>
-                <div style={{color:'#8B949E',fontSize:12,marginTop:8,lineHeight:1.7,background:'#0D1117',borderRadius:8,padding:12}}>
+                <summary style={{color:C.soft,fontSize:12,cursor:'pointer'}}>¿Cómo crear el schema en Supabase?</summary>
+                <div style={{color:C.mid,fontSize:12,marginTop:8,lineHeight:1.7,background:'#F7F4EE',borderRadius:8,padding:12}}>
                   1. Entra a tu proyecto en supabase.com<br/>
-                  2. Ve a <strong style={{color:'#E6EDF3'}}>SQL Editor</strong> en el menú lateral<br/>
-                  3. Copia y ejecuta el contenido del archivo <code style={{background:'#21262D',padding:'1px 5px',borderRadius:4}}>supabase/schema.sql</code><br/>
-                  4. Regresa aquí y conéctate
+                  2. Ve a <strong style={{color:C.blue}}>SQL Editor</strong> en el menú lateral<br/>
+                  3. Pega y ejecuta este SQL:
+                  <pre style={{marginTop:8,background:'#EEE8DF',padding:10,borderRadius:6,fontSize:10,overflowX:'auto',lineHeight:1.5,whiteSpace:'pre-wrap'}}>{sqlSchema}</pre>
                 </div>
               </details>
             </div>
@@ -149,18 +224,15 @@
 
     /* ── CIRCULAR PROGRESS ── */
     function CircularProgress({ pct }) {
-      const r = 30, circ = 2 * Math.PI * r;
-      const color = pctColor(pct);
+      const r=30,circ=2*Math.PI*r,color=pctColor(pct);
       return (
         <div style={{position:'relative',width:80,height:80,flexShrink:0}}>
           <svg width="80" height="80" style={{transform:'rotate(-90deg)'}}>
-            <circle cx="40" cy="40" r={r} fill="none" stroke="#21262D" strokeWidth="7"/>
+            <circle cx="40" cy="40" r={r} fill="none" stroke={C.lg} strokeWidth="7"/>
             <circle cx="40" cy="40" r={r} fill="none" stroke={color} strokeWidth="7"
-              strokeLinecap="round"
-              strokeDasharray={circ}
-              strokeDashoffset={circ - (pct / 100) * circ}
-              style={{transition:'stroke-dashoffset 1s cubic-bezier(0.4,0,0.2,1)'}}
-            />
+              strokeLinecap="round" strokeDasharray={circ}
+              strokeDashoffset={circ-(pct/100)*circ}
+              style={{transition:'stroke-dashoffset 1s cubic-bezier(0.4,0,0.2,1)'}}/>
           </svg>
           <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
             <span style={{fontSize:15,fontWeight:900,color,lineHeight:1}}>{pct}%</span>
@@ -171,31 +243,31 @@
 
     /* ── PROJECT CARD ── */
     function ProjectCard({ project, tasks, progress, onClick }) {
-      const done   = tasks.filter(t => t.status === 'Completado').length;
-      const inProg = tasks.filter(t => t.status === 'En proceso').length;
-      const pend   = tasks.filter(t => t.status === 'Sin iniciar').length;
-      const color  = pctColor(progress);
+      const done=tasks.filter(t=>t.status==='Completado').length;
+      const inProg=tasks.filter(t=>t.status==='En proceso').length;
+      const pend=tasks.filter(t=>t.status==='Sin iniciar').length;
+      const color=pctColor(progress);
       return (
         <div onClick={onClick} className="card fade-in"
           style={{padding:20,cursor:'pointer',transition:'all 0.2s',display:'flex',flexDirection:'column',gap:14}}>
           <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:10}}>
             <div style={{display:'flex',alignItems:'center',gap:10,minWidth:0}}>
-              <div style={{width:42,height:42,borderRadius:12,background:'#21262D',display:'flex',alignItems:'center',justifyContent:'center',fontSize:22,flexShrink:0}}>{project.icon}</div>
+              <div style={{width:42,height:42,borderRadius:12,background:C.beige,display:'flex',alignItems:'center',justifyContent:'center',fontSize:22,flexShrink:0}}>{project.icon}</div>
               <div style={{minWidth:0}}>
-                <div style={{fontWeight:700,fontSize:13,color:'#E6EDF3',lineHeight:1.3}}>{project.name}</div>
-                <div style={{fontSize:11,color:'#484F58',marginTop:3}}>{tasks.length} actividades</div>
+                <div style={{fontWeight:700,fontSize:13,color:C.blue,lineHeight:1.3}}>{project.name}</div>
+                <div style={{fontSize:11,color:C.soft,marginTop:3}}>{tasks.length} actividades</div>
               </div>
             </div>
-            <CircularProgress pct={progress} />
+            <CircularProgress pct={progress}/>
           </div>
-          <div style={{height:6,background:'#21262D',borderRadius:99,overflow:'hidden'}}>
-            <div className="progress-bar" style={{height:'100%',width:`${progress}%`,background:`linear-gradient(90deg,#E94560,${color})`,borderRadius:99}}/>
+          <div style={{height:6,background:C.lg,borderRadius:99,overflow:'hidden'}}>
+            <div className="progress-bar" style={{height:'100%',width:`${progress}%`,background:`linear-gradient(90deg,${C.blue},${C.green})`,borderRadius:99}}/>
           </div>
-          <div style={{display:'flex',justifyContent:'space-between',borderTop:'1px solid #21262D',paddingTop:12}}>
-            {[{v:done,l:'listas',c:'#4ADE80'},{v:inProg,l:'en proceso',c:'#FBBF24'},{v:pend,l:'pendientes',c:'#484F58'}].map(({v,l,c})=>(
+          <div style={{display:'flex',justifyContent:'space-between',borderTop:`1px solid ${C.border}`,paddingTop:12}}>
+            {[{v:done,l:'listas',c:C.green},{v:inProg,l:'en proceso',c:'#D97706'},{v:pend,l:'pendientes',c:C.soft}].map(({v,l,c})=>(
               <span key={l} style={{fontSize:11,display:'flex',alignItems:'center',gap:5,color:c}}>
                 <span style={{width:7,height:7,borderRadius:'50%',background:c,display:'inline-block'}}/>
-                <strong>{v}</strong> <span style={{color:'#484F58'}}>{l}</span>
+                <strong>{v}</strong> <span style={{color:C.soft}}>{l}</span>
               </span>
             ))}
           </div>
@@ -205,74 +277,57 @@
 
     /* ── DASHBOARD ── */
     function Dashboard({ projects, tasks, getProgress, getProjTasks, setView }) {
-      const total  = tasks.length;
-      const done   = tasks.filter(t => t.status === 'Completado').length;
-      const inProg = tasks.filter(t => t.status === 'En proceso').length;
-      const pend   = total - done - inProg;
-      const global = total ? Math.round((done / total) * 100) : 0;
-
+      const total=tasks.length,done=tasks.filter(t=>t.status==='Completado').length;
+      const inProg=tasks.filter(t=>t.status==='En proceso').length,pend=total-done-inProg;
+      const global=total?Math.round((done/total)*100):0;
       return (
         <div className="fade-in" style={{padding:'28px 0',display:'flex',flexDirection:'column',gap:28}}>
           <div>
-            <h1 style={{fontSize:26,fontWeight:900,color:'#E6EDF3'}}>Dashboard</h1>
-            <p style={{color:'#8B949E',fontSize:14,marginTop:4}}>Seguimiento en tiempo real · Plan de Mercadeo 2026</p>
+            <h1 style={{fontSize:26,fontWeight:900,color:C.blue}}>Dashboard</h1>
+            <p style={{color:C.mid,fontSize:14,marginTop:4}}>Seguimiento en tiempo real · Plan de Mercadeo 2026</p>
           </div>
-
-          {/* Global progress banner */}
           <div className="card" style={{padding:28,position:'relative',overflow:'hidden'}}>
-            <div style={{position:'absolute',inset:0,background:'linear-gradient(135deg,rgba(233,69,96,0.08),transparent,rgba(39,174,96,0.04))',pointerEvents:'none'}}/>
+            <div style={{position:'absolute',inset:0,background:`linear-gradient(135deg,rgba(28,58,82,0.05),transparent,rgba(0,107,107,0.04))`,pointerEvents:'none'}}/>
             <div style={{position:'relative',display:'flex',flexWrap:'wrap',gap:24,alignItems:'center'}}>
               <div style={{flex:1,minWidth:220}}>
                 <div style={{display:'flex',alignItems:'flex-end',gap:10,marginBottom:14}}>
-                  <span style={{fontSize:56,fontWeight:900,color:'#E6EDF3',lineHeight:1}}>{global}%</span>
-                  <span style={{color:'#8B949E',fontSize:14,marginBottom:8}}>progreso global</span>
+                  <span style={{fontSize:56,fontWeight:900,color:C.blue,lineHeight:1}}>{global}%</span>
+                  <span style={{color:C.mid,fontSize:14,marginBottom:8}}>progreso global</span>
                 </div>
-                <div style={{height:12,background:'#21262D',borderRadius:99,overflow:'hidden'}}>
-                  <div className="progress-bar" style={{height:'100%',width:`${global}%`,background:'linear-gradient(90deg,#E94560,#F5A623,#27AE60)',borderRadius:99}}/>
+                <div style={{height:12,background:C.lg,borderRadius:99,overflow:'hidden'}}>
+                  <div className="progress-bar" style={{height:'100%',width:`${global}%`,background:`linear-gradient(90deg,${C.blue},${C.green})`,borderRadius:99}}/>
                 </div>
               </div>
               <div style={{display:'flex',gap:28,flexShrink:0}}>
-                {[{v:done,l:'Completadas',c:'#4ADE80'},{v:inProg,l:'En proceso',c:'#FBBF24'},{v:pend,l:'Pendientes',c:'#484F58'}].map(({v,l,c})=>(
+                {[{v:done,l:'Completadas',c:C.green},{v:inProg,l:'En proceso',c:'#D97706'},{v:pend,l:'Pendientes',c:C.soft}].map(({v,l,c})=>(
                   <div key={l} style={{textAlign:'center'}}>
                     <div style={{fontSize:32,fontWeight:900,color:c}}>{v}</div>
-                    <div style={{fontSize:11,color:'#8B949E',marginTop:2}}>{l}</div>
+                    <div style={{fontSize:11,color:C.mid,marginTop:2}}>{l}</div>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-
-          {/* Stat cards */}
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:14}}>
-            {[
-              {icon:'🚀',v:projects.length,l:'Proyectos',s:'Plan 2026',c:'#E94560'},
-              {icon:'✅',v:done,l:'Completadas',s:`de ${total} actividades`,c:'#4ADE80'},
-              {icon:'⏳',v:inProg,l:'En proceso',s:'actividades activas',c:'#FBBF24'},
-              {icon:'📋',v:pend,l:'Por iniciar',s:'actividades pendientes',c:'#8B949E'},
-            ].map(({icon,v,l,s,c})=>(
+            {[{icon:'🚀',v:projects.length,l:'Proyectos',s:'Plan 2026',c:C.blue},{icon:'✅',v:done,l:'Completadas',s:`de ${total} actividades`,c:C.green},{icon:'⏳',v:inProg,l:'En proceso',s:'actividades activas',c:'#D97706'},{icon:'📋',v:pend,l:'Por iniciar',s:'actividades pendientes',c:C.soft}].map(({icon,v,l,s,c})=>(
               <div key={l} className="stat-card">
                 <div style={{width:46,height:46,borderRadius:14,background:`${c}18`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:22,flexShrink:0}}>{icon}</div>
                 <div>
                   <div style={{fontSize:28,fontWeight:900,color:c,lineHeight:1}}>{v}</div>
-                  <div style={{fontSize:13,fontWeight:600,color:'#E6EDF3',marginTop:2}}>{l}</div>
-                  <div style={{fontSize:11,color:'#484F58'}}>{s}</div>
+                  <div style={{fontSize:13,fontWeight:600,color:C.blue,marginTop:2}}>{l}</div>
+                  <div style={{fontSize:11,color:C.soft}}>{s}</div>
                 </div>
               </div>
             ))}
           </div>
-
-          {/* Project cards grid */}
           <div>
             <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16}}>
-              <h2 style={{fontSize:18,fontWeight:800,color:'#E6EDF3'}}>Proyectos</h2>
-              <button onClick={()=>setView('tasks')} style={{background:'none',border:'none',color:'#E94560',cursor:'pointer',fontSize:14,fontWeight:500}}>
-                Ver todas las actividades →
-              </button>
+              <h2 style={{fontSize:18,fontWeight:800,color:C.blue}}>Proyectos</h2>
+              <button onClick={()=>setView('tasks')} style={{background:'none',border:'none',color:C.green,cursor:'pointer',fontSize:14,fontWeight:600}}>Ver todas las actividades →</button>
             </div>
             <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(270px,1fr))',gap:16}}>
-              {projects.map(p => (
-                <ProjectCard key={p.id} project={p} tasks={getProjTasks(p.id)}
-                  progress={getProgress(p.id)} onClick={()=>setView('tasks')} />
+              {projects.map(p=>(
+                <ProjectCard key={p.id} project={p} tasks={getProjTasks(p.id)} progress={getProgress(p.id)} onClick={()=>setView('tasks')}/>
               ))}
             </div>
           </div>
@@ -282,98 +337,127 @@
 
     /* ── STATUS SELECT ── */
     function StatusSelect({ value, onChange }) {
-      const cls = value==='Completado' ? 'status-pill status-ok' : value==='En proceso' ? 'status-pill status-en' : 'status-pill status-sin';
+      const cls=value==='Completado'?'status-pill status-ok':value==='En proceso'?'status-pill status-en':'status-pill status-sin';
+      return <select value={value} onChange={e=>onChange(e.target.value)} className={cls}><option>Sin iniciar</option><option>En proceso</option><option>Completado</option></select>;
+    }
+
+    /* ── RESPONSIBLE SELECT ── */
+    function ResponsibleSelect({ value, onChange }) {
+      const [team,setTeamLocal]=useState(getTeam());
+      useEffect(()=>{ setTeamLocal(getTeam()); },[]);
       return (
-        <select value={value} onChange={e=>onChange(e.target.value)} className={cls}>
-          <option>Sin iniciar</option>
-          <option>En proceso</option>
-          <option>Completado</option>
+        <select value={value||''} onChange={e=>onChange(e.target.value||null)} className="resp-select"
+          style={{color:value?C.text:C.soft}}>
+          <option value="">— Asignar —</option>
+          {team.map(name=><option key={name} value={name}>{name}</option>)}
         </select>
       );
     }
 
     /* ── TASK ROW ── */
     function TaskRow({ task, index, updateTask }) {
-      const [resp, setResp] = useState(task.responsible || '');
-      const [obs,  setObs]  = useState(task.observations || '');
-      const done = task.status === 'Completado';
-
+      const [obs,setObs]=useState(task.observations||'');
+      const done=task.status==='Completado';
       return (
-        <tr className="task-row" style={{borderTop:'1px solid #1C2128'}}>
-          <td style={{padding:'10px 12px',color:'#484F58',fontSize:11,fontFamily:'monospace',textAlign:'center',width:36}}>{index+1}</td>
+        <tr className="task-row">
+          <td style={{padding:'10px 12px',color:C.soft,fontSize:11,fontFamily:'monospace',textAlign:'center',width:36}}>{index+1}</td>
           <td style={{padding:'10px 16px',minWidth:220}}>
             <div style={{display:'flex',alignItems:'center',gap:8}}>
-              <span style={{width:7,height:7,borderRadius:'50%',flexShrink:0,
-                background:done?'#4ADE80':task.status==='En proceso'?'#FBBF24':'#484F58'}}/>
-              <span style={{fontSize:13,fontWeight:500,
-                color:done?'#484F58':'#E6EDF3',
-                textDecoration:done?'line-through':'none'}}>
-                {task.name}
-              </span>
+              <span style={{width:7,height:7,borderRadius:'50%',flexShrink:0,background:done?C.green:task.status==='En proceso'?'#D97706':C.soft}}/>
+              <span style={{fontSize:13,fontWeight:500,color:done?C.soft:C.text,textDecoration:done?'line-through':'none'}}>{task.name}</span>
             </div>
           </td>
           <td style={{padding:'10px 12px',textAlign:'center'}}>
-            <StatusSelect value={task.status} onChange={v=>updateTask(task.id,{status:v})} />
+            <StatusSelect value={task.status} onChange={v=>updateTask(task.id,{status:v})}/>
           </td>
-          <td style={{padding:'10px 8px',minWidth:130}}>
-            <input className="input-inline" placeholder="Asignar…" value={resp}
-              onChange={e=>setResp(e.target.value)}
-              onBlur={()=>{ if(resp!==(task.responsible||'')) updateTask(task.id,{responsible:resp}); }} />
+          <td style={{padding:'10px 8px',minWidth:145}}>
+            <ResponsibleSelect value={task.responsible} onChange={v=>updateTask(task.id,{responsible:v})}/>
           </td>
           <td style={{padding:'10px 8px',minWidth:145}}>
             <input type="date" className="input-inline" style={{fontSize:12}}
-              value={task.scheduled_date ? task.scheduled_date.slice(0,10) : ''}
-              onChange={e=>updateTask(task.id,{scheduled_date:e.target.value||null})} />
+              value={task.scheduled_date?task.scheduled_date.slice(0,10):''}
+              onChange={e=>updateTask(task.id,{scheduled_date:e.target.value||null})}/>
           </td>
           <td style={{padding:'10px 8px',minWidth:190}}>
             <input className="input-inline" placeholder="Agregar nota…" value={obs}
               onChange={e=>setObs(e.target.value)}
-              onBlur={()=>{ if(obs!==(task.observations||'')) updateTask(task.id,{observations:obs}); }} />
+              onBlur={()=>{if(obs!==(task.observations||''))updateTask(task.id,{observations:obs});}}/>
+          </td>
+        </tr>
+      );
+    }
+
+    /* ── ADD TASK ROW ── */
+    function AddTaskRow({ projectId, maxOrderIndex, onAdd }) {
+      const [active,setActive]=useState(false);
+      const [name,setName]=useState('');
+      const ref=useRef(null);
+      function activate(){ setActive(true); setTimeout(()=>ref.current?.focus(),50); }
+      async function confirm(){ const n=name.trim(); if(!n){setActive(false);return;} await onAdd(projectId,n,maxOrderIndex+1); setName('');setActive(false); }
+      if(!active) return (
+        <tr><td colSpan={6} className="add-row-cell">
+          <button onClick={activate} style={{background:'none',border:'none',cursor:'pointer',display:'flex',alignItems:'center',gap:6,color:C.green,fontSize:13,fontWeight:600,padding:'2px 4px',borderRadius:6}}>
+            <span style={{fontSize:20,lineHeight:1}}>+</span> Agregar actividad
+          </button>
+        </td></tr>
+      );
+      return (
+        <tr style={{background:'#F4F8F4'}}>
+          <td style={{color:C.soft,fontSize:11,textAlign:'center',padding:'10px 12px'}}>—</td>
+          <td colSpan={5} style={{padding:'8px 12px'}}>
+            <div style={{display:'flex',alignItems:'center',gap:8}}>
+              <input ref={ref} value={name} onChange={e=>setName(e.target.value)}
+                onKeyDown={e=>{if(e.key==='Enter')confirm();if(e.key==='Escape'){setActive(false);setName('');}}}
+                placeholder="Nombre de la actividad… (Enter para guardar, Esc para cancelar)"
+                style={{flex:1,background:'#fff',border:`1.5px solid ${C.green}`,borderRadius:8,padding:'7px 12px',fontSize:13,color:C.text,outline:'none',fontFamily:'inherit'}}/>
+              <button onClick={confirm} className="btn-green" style={{padding:'7px 14px',whiteSpace:'nowrap'}}>Guardar</button>
+              <button onClick={()=>{setActive(false);setName('');}} style={{background:'none',border:'none',cursor:'pointer',color:C.soft,fontSize:20,lineHeight:1}}>✕</button>
+            </div>
           </td>
         </tr>
       );
     }
 
     /* ── PROJECT SECTION ── */
-    function ProjectSection({ project, tasks, progress, updateTask }) {
-      const [open, setOpen] = useState(true);
-      const done   = tasks.filter(t => t.status === 'Completado').length;
-      const inProg = tasks.filter(t => t.status === 'En proceso').length;
-      const color  = pctColor(progress);
-
+    function ProjectSection({ project, tasks, progress, updateTask, addTask }) {
+      const [open,setOpen]=useState(true);
+      const done=tasks.filter(t=>t.status==='Completado').length;
+      const inProg=tasks.filter(t=>t.status==='En proceso').length;
+      const color=pctColor(progress);
+      const maxOi=tasks.reduce((m,t)=>Math.max(m,t.order_index||0),0);
       return (
         <div className="card" style={{overflow:'hidden',marginBottom:16}}>
           <div className="project-header" onClick={()=>setOpen(o=>!o)}>
             <div style={{display:'flex',alignItems:'center',gap:12}}>
-              <div style={{width:40,height:40,borderRadius:12,background:'#21262D',display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0}}>{project.icon}</div>
+              <div style={{width:40,height:40,borderRadius:12,background:C.beige,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0}}>{project.icon}</div>
               <div>
-                <div style={{fontWeight:700,fontSize:15,color:'#E6EDF3'}}>{project.name}</div>
-                <div style={{fontSize:11,color:'#484F58',marginTop:2}}>{done} completadas · {inProg} en proceso · {tasks.length} totales</div>
+                <div style={{fontWeight:700,fontSize:15,color:C.blue}}>{project.name}</div>
+                <div style={{fontSize:11,color:C.soft,marginTop:2}}>{done} completadas · {inProg} en proceso · {tasks.length} totales</div>
               </div>
             </div>
             <div style={{display:'flex',alignItems:'center',gap:14,flexShrink:0}}>
               <div style={{display:'flex',alignItems:'center',gap:10}}>
-                <div style={{width:110,height:6,background:'#21262D',borderRadius:99,overflow:'hidden'}}>
+                <div style={{width:110,height:6,background:C.lg,borderRadius:99,overflow:'hidden'}}>
                   <div className="progress-bar" style={{height:'100%',width:`${progress}%`,background:color,borderRadius:99}}/>
                 </div>
                 <span style={{fontSize:13,fontWeight:700,color,width:38,textAlign:'right'}}>{progress}%</span>
               </div>
-              <span style={{color:'#484F58',fontSize:14,transition:'transform 0.2s',display:'inline-block',transform:open?'rotate(0deg)':'rotate(-90deg)'}}>▾</span>
+              <span style={{color:C.soft,fontSize:14,transition:'transform 0.2s',display:'inline-block',transform:open?'rotate(0deg)':'rotate(-90deg)'}}>▾</span>
             </div>
           </div>
-
           {open && (
-            <div style={{borderTop:'1px solid #21262D',overflowX:'auto'}}>
-              <table style={{width:'100%',minWidth:750,borderCollapse:'collapse'}}>
+            <div style={{borderTop:`1px solid ${C.border}`,overflowX:'auto'}}>
+              <table style={{width:'100%',minWidth:760,borderCollapse:'collapse'}}>
                 <thead>
-                  <tr style={{background:'#0D1117'}}>
+                  <tr style={{background:'#F7F4EE'}}>
                     {['#','ACTIVIDAD','ESTADO','RESPONSABLE','FECHA PROGRAMADA','OBSERVACIONES'].map(h=>(
-                      <th key={h} style={{padding:'10px 12px',textAlign:'left',fontSize:10,fontWeight:700,letterSpacing:'0.5px',color:'#484F58',textTransform:'uppercase',whiteSpace:'nowrap'}}>{h}</th>
+                      <th key={h} style={{padding:'10px 12px',textAlign:'left',fontSize:10,fontWeight:700,letterSpacing:'0.5px',color:C.mid,textTransform:'uppercase',whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`}}>{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {tasks.map((t,i) => <TaskRow key={t.id} task={t} index={i} updateTask={updateTask}/>)}
+                  {tasks.map((t,i)=><TaskRow key={t.id} task={t} index={i} updateTask={updateTask}/>)}
+                  <AddTaskRow projectId={project.id} maxOrderIndex={maxOi} onAdd={addTask}/>
                 </tbody>
               </table>
             </div>
@@ -383,53 +467,53 @@
     }
 
     /* ── TASKS VIEW ── */
-    function TasksView({ projects, tasks, updateTask, getProgress, getProjTasks }) {
-      const [search, setSearch] = useState('');
-      const [filter, setFilter] = useState('Todos');
-
-      const visible = useMemo(() => {
-        return projects.map(p => {
-          let t = getProjTasks(p.id);
-          if (filter !== 'Todos') t = t.filter(x => x.status === filter);
-          if (search.trim()) {
-            const q = search.toLowerCase();
-            t = t.filter(x => x.name.toLowerCase().includes(q) || (x.responsible||'').toLowerCase().includes(q));
-          }
-          return { p, t };
-        }).filter(({ t }) => t.length > 0);
-      }, [projects, tasks, filter, search]);
+    function TasksView({ projects, tasks, updateTask, addTask, getProgress, getProjTasks, onOpenTeam }) {
+      const [search,setSearch]=useState('');
+      const [filter,setFilter]=useState('Todos');
+      const visible=useMemo(()=>
+        projects.map(p=>({p,t:getProjTasks(p.id)}))
+          .map(({p,t})=>{
+            let ft=t;
+            if(filter!=='Todos') ft=ft.filter(x=>x.status===filter);
+            if(search.trim()){ const q=search.toLowerCase(); ft=ft.filter(x=>x.name.toLowerCase().includes(q)||(x.responsible||'').toLowerCase().includes(q)); }
+            return {p,t,ft};
+          })
+          .filter(({ft})=>ft.length>0||filter==='Todos')
+      ,[projects,tasks,filter,search]);
 
       return (
         <div className="fade-in" style={{padding:'28px 0',display:'flex',flexDirection:'column',gap:20}}>
-          <div>
-            <h1 style={{fontSize:26,fontWeight:900,color:'#E6EDF3'}}>Proyectos y Actividades</h1>
-            <p style={{color:'#8B949E',fontSize:14,marginTop:4}}>{projects.length} proyectos · {tasks.length} actividades en total</p>
+          <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',flexWrap:'wrap',gap:12}}>
+            <div>
+              <h1 style={{fontSize:26,fontWeight:900,color:C.blue}}>Proyectos y Actividades</h1>
+              <p style={{color:C.mid,fontSize:14,marginTop:4}}>{projects.length} proyectos · {tasks.length} actividades en total</p>
+            </div>
+            <button onClick={onOpenTeam} className="btn-green" style={{display:'flex',alignItems:'center',gap:6}}>
+              👥 Gestionar Equipo
+            </button>
           </div>
-
-          {/* Filters */}
           <div style={{display:'flex',flexWrap:'wrap',gap:10,alignItems:'center'}}>
             <div style={{position:'relative'}}>
-              <span style={{position:'absolute',left:10,top:'50%',transform:'translateY(-50%)',fontSize:14,color:'#484F58'}}>🔍</span>
+              <span style={{position:'absolute',left:10,top:'50%',transform:'translateY(-50%)',fontSize:14,color:C.soft}}>🔍</span>
               <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Buscar actividad o responsable…"
-                style={{background:'#161B22',border:'1px solid #30363D',borderRadius:10,padding:'8px 12px 8px 32px',color:'#E6EDF3',fontSize:13,outline:'none',fontFamily:'inherit',width:280}} />
+                style={{background:'#fff',border:`1px solid ${C.border}`,borderRadius:10,padding:'8px 12px 8px 32px',color:C.text,fontSize:13,outline:'none',fontFamily:'inherit',width:280}}/>
             </div>
-            {['Todos','Sin iniciar','En proceso','Completado'].map(s => {
-              const active = filter === s;
-              const col = s==='Completado'?'#4ADE80':s==='En proceso'?'#FBBF24':s==='Sin iniciar'?'#8B949E':'#E94560';
+            {['Todos','Sin iniciar','En proceso','Completado'].map(s=>{
+              const active=filter===s;
+              const col=s==='Completado'?C.green:s==='En proceso'?'#D97706':s==='Sin iniciar'?C.mid:C.blue;
               return (
                 <button key={s} onClick={()=>setFilter(s)}
-                  style={{padding:'6px 14px',borderRadius:8,border:'1px solid #30363D',
-                    background:active?col:'transparent',color:active?'#0D1117':col,
-                    fontSize:12,fontWeight:600,cursor:'pointer',transition:'all 0.15s'}}>
+                  style={{padding:'6px 14px',borderRadius:8,border:`1px solid ${C.border}`,background:active?col:'transparent',color:active?'#fff':col,fontSize:12,fontWeight:600,cursor:'pointer',transition:'all 0.15s'}}>
                   {s}
                 </button>
               );
             })}
           </div>
-
-          {visible.length === 0
-            ? <div className="card" style={{padding:48,textAlign:'center'}}><div style={{fontSize:40,marginBottom:10}}>🔎</div><div style={{color:'#8B949E'}}>No hay resultados</div></div>
-            : visible.map(({p,t}) => <ProjectSection key={p.id} project={p} tasks={t} progress={getProgress(p.id)} updateTask={updateTask}/>)
+          {visible.length===0
+            ? <div className="card" style={{padding:48,textAlign:'center'}}><div style={{fontSize:40,marginBottom:10}}>🔎</div><div style={{color:C.soft}}>No hay resultados</div></div>
+            : visible.map(({p,t,ft})=>(
+              <ProjectSection key={p.id} project={p} tasks={filter==='Todos'?t:ft} progress={getProgress(p.id)} updateTask={updateTask} addTask={addTask}/>
+            ))
           }
         </div>
       );
@@ -438,30 +522,28 @@
     /* ── NAVBAR ── */
     function Navbar({ view, setView, globalPct, done, total, onConfig }) {
       return (
-        <header style={{position:'sticky',top:0,zIndex:50,borderBottom:'1px solid #21262D',background:'rgba(13,17,23,0.96)',backdropFilter:'blur(10px)'}}>
+        <header style={{position:'sticky',top:0,zIndex:50,borderBottom:`1px solid ${C.border}`,background:'rgba(240,235,226,0.96)',backdropFilter:'blur(10px)'}}>
           <div style={{maxWidth:1400,margin:'0 auto',padding:'0 24px',height:60,display:'flex',alignItems:'center',justifyContent:'space-between',gap:16}}>
             <div style={{display:'flex',alignItems:'center',gap:10,flexShrink:0}}>
-              <div style={{width:32,height:32,borderRadius:8,background:'#E94560',display:'flex',alignItems:'center',justifyContent:'center',fontSize:18}}>📊</div>
+              <div style={{width:32,height:32,borderRadius:8,background:C.blue,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18}}>📊</div>
               <div>
-                <div style={{fontSize:13,fontWeight:700,color:'#E6EDF3',lineHeight:1.2}}>Plan Mercadeo 2026</div>
-                <div style={{fontSize:10,color:'#8B949E'}}>Tierra Grata & Co.</div>
+                <div style={{fontSize:13,fontWeight:700,color:C.blue,lineHeight:1.2}}>Plan Mercadeo 2026</div>
+                <div style={{fontSize:10,color:C.mid}}>Tierra Grata & Co.</div>
               </div>
             </div>
             <div style={{display:'flex',alignItems:'center',gap:10,flex:1,maxWidth:260}}>
-              <div style={{flex:1,height:4,background:'#21262D',borderRadius:99,overflow:'hidden'}}>
-                <div className="progress-bar" style={{height:'100%',width:`${globalPct}%`,background:'linear-gradient(90deg,#E94560,#27AE60)',borderRadius:99}}/>
+              <div style={{flex:1,height:4,background:C.lg,borderRadius:99,overflow:'hidden'}}>
+                <div className="progress-bar" style={{height:'100%',width:`${globalPct}%`,background:`linear-gradient(90deg,${C.blue},${C.green})`,borderRadius:99}}/>
               </div>
-              <span style={{fontSize:11,color:'#8B949E',whiteSpace:'nowrap'}}><strong style={{color:'#E6EDF3'}}>{done}</strong>/{total}</span>
+              <span style={{fontSize:11,color:C.mid,whiteSpace:'nowrap'}}><strong style={{color:C.blue}}>{done}</strong>/{total}</span>
             </div>
             <div style={{display:'flex',alignItems:'center',gap:8}}>
-              <div style={{background:'#161B22',border:'1px solid #30363D',borderRadius:12,padding:4,display:'flex',gap:4}}>
+              <div style={{background:'#fff',border:`1px solid ${C.border}`,borderRadius:12,padding:4,display:'flex',gap:4}}>
                 <button onClick={()=>setView('dashboard')} className={`nav-tab${view==='dashboard'?' active':''}`}>📊 Dashboard</button>
                 <button onClick={()=>setView('tasks')}     className={`nav-tab${view==='tasks'?' active':''}`}>✅ Proyectos</button>
               </div>
               <button onClick={onConfig} title="Configurar Supabase"
-                style={{width:34,height:34,borderRadius:8,background:'#21262D',border:'1px solid #30363D',cursor:'pointer',fontSize:16,display:'flex',alignItems:'center',justifyContent:'center',color:'#8B949E'}}>
-                ⚙️
-              </button>
+                style={{width:34,height:34,borderRadius:8,background:'#fff',border:`1px solid ${C.border}`,cursor:'pointer',fontSize:16,display:'flex',alignItems:'center',justifyContent:'center',color:C.mid}}>⚙️</button>
             </div>
           </div>
         </header>
@@ -470,87 +552,87 @@
 
     /* ── APP ── */
     function App() {
-      const [view,    setView]    = useState('dashboard');
-      const [projects,setProjects]= useState([]);
-      const [tasks,   setTasks]   = useState([]);
-      const [loading, setLoading] = useState(true);
-      const [error,   setError]   = useState(null);
-      const [setup,   setSetup]   = useState(false);
-      const [seeding, setSeeding] = useState(false);
+      const [view,setView]=useState('dashboard');
+      const [projects,setProjects]=useState([]);
+      const [tasks,setTasks]=useState([]);
+      const [loading,setLoading]=useState(true);
+      const [error,setError]=useState(null);
+      const [setup,setSetup]=useState(false);
+      const [seeding,setSeeding]=useState(false);
+      const [teamOpen,setTeamOpen]=useState(false);
 
-      const loadData = useCallback(async () => {
-        const client = getClient();
-        if (!client) { setLoading(false); setSetup(true); return; }
-        try {
-          const [{ data: ps, error: e1 }, { data: ts, error: e2 }] = await Promise.all([
+      const loadData=useCallback(async()=>{
+        const client=getClient();
+        if(!client){setLoading(false);setSetup(true);return;}
+        try{
+          const [{data:ps,error:e1},{data:ts,error:e2}]=await Promise.all([
             client.from('projects').select('*').order('order_index'),
             client.from('tasks').select('*').order('order_index'),
           ]);
-          if (e1) throw e1;
-          if (e2) throw e2;
-          if (!ps?.length) { await seedDB(client); return; }
-          setProjects(ps);
-          setTasks(ts || []);
-        } catch(e) { setError(e.message); }
-        finally { setLoading(false); }
-      }, []);
+          if(e1)throw e1; if(e2)throw e2;
+          if(!ps?.length){await seedDB(client);return;}
+          setProjects(ps); setTasks(ts||[]);
+        }catch(e){setError(e.message);}
+        finally{setLoading(false);}
+      },[]);
 
-      async function seedDB(client) {
+      async function seedDB(client){
         setSeeding(true);
-        try {
-          for (const proj of INITIAL_PROJECTS) {
-            const { data: p, error: e1 } = await client.from('projects')
-              .insert({ name:proj.name, icon:proj.icon, order_index:proj.order_index })
-              .select().single();
-            if (e1) throw e1;
-            const { error: e2 } = await client.from('tasks').insert(
-              proj.tasks.map((name, i) => ({ project_id:p.id, name, status:'Sin iniciar', order_index:i }))
-            );
-            if (e2) throw e2;
+        try{
+          for(const proj of INITIAL_PROJECTS){
+            const{data:p,error:e1}=await client.from('projects').insert({name:proj.name,icon:proj.icon,order_index:proj.order_index}).select().single();
+            if(e1)throw e1;
+            const{error:e2}=await client.from('tasks').insert(proj.tasks.map((name,i)=>({project_id:p.id,name,status:'Sin iniciar',order_index:i})));
+            if(e2)throw e2;
           }
-        } catch(e) { setError('Error inicializando: ' + e.message); }
-        finally { setSeeding(false); loadData(); }
+        }catch(e){setError('Error inicializando: '+e.message);}
+        finally{setSeeding(false);loadData();}
       }
 
-      useEffect(() => {
+      useEffect(()=>{
         loadData();
-        const client = getClient();
-        if (!client) return;
-        const ch = client.channel('rt-tasks')
-          .on('postgres_changes', { event:'UPDATE', schema:'public', table:'tasks' }, payload => {
-            setTasks(prev => prev.map(t => t.id === payload.new.id ? payload.new : t));
+        const client=getClient();
+        if(!client)return;
+        const ch=client.channel('rt-tasks')
+          .on('postgres_changes',{event:'*',schema:'public',table:'tasks'},payload=>{
+            if(payload.eventType==='INSERT') setTasks(prev=>[...prev,payload.new]);
+            else if(payload.eventType==='UPDATE') setTasks(prev=>prev.map(t=>t.id===payload.new.id?payload.new:t));
+            else if(payload.eventType==='DELETE') setTasks(prev=>prev.filter(t=>t.id!==payload.old.id));
           }).subscribe();
-        return () => client.removeChannel(ch);
-      }, []);
+        return()=>client.removeChannel(ch);
+      },[]);
 
-      async function updateTask(id, updates) {
-        setTasks(prev => prev.map(t => t.id === id ? {...t, ...updates} : t));
-        const client = getClient();
-        if (client) await client.from('tasks').update(updates).eq('id', id);
+      async function updateTask(id,updates){
+        setTasks(prev=>prev.map(t=>t.id===id?{...t,...updates}:t));
+        const client=getClient();
+        if(client) await client.from('tasks').update({...updates,updated_at:new Date().toISOString()}).eq('id',id);
       }
 
-      const getProjTasks = id => tasks.filter(t => t.project_id === id);
-      const getProgress  = id => {
-        const t = getProjTasks(id);
-        return t.length ? Math.round(t.filter(x => x.status === 'Completado').length / t.length * 100) : 0;
-      };
-      const total     = tasks.length;
-      const done      = tasks.filter(t => t.status === 'Completado').length;
-      const globalPct = total ? Math.round(done / total * 100) : 0;
+      async function addTask(projectId,name,orderIndex){
+        const client=getClient();
+        if(!client)return;
+        const{data,error}=await client.from('tasks').insert({project_id:projectId,name,status:'Sin iniciar',order_index:orderIndex}).select().single();
+        if(!error&&data) setTasks(prev=>[...prev,data]);
+      }
 
-      if (loading || seeding) return (
-        <div style={{minHeight:'100vh',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:14}}>
-          <div className="spinner" style={{width:44,height:44,border:'4px solid #30363D',borderTopColor:'#E94560',borderRadius:'50%'}}/>
-          <p style={{color:'#8B949E',fontSize:14}}>{seeding ? 'Inicializando datos por primera vez...' : 'Cargando...'}</p>
+      const getProjTasks=id=>tasks.filter(t=>t.project_id===id).sort((a,b)=>(a.order_index||0)-(b.order_index||0));
+      const getProgress=id=>{ const t=getProjTasks(id); return t.length?Math.round(t.filter(x=>x.status==='Completado').length/t.length*100):0; };
+      const total=tasks.length,done=tasks.filter(t=>t.status==='Completado').length;
+      const globalPct=total?Math.round(done/total*100):0;
+
+      if(loading||seeding) return (
+        <div style={{minHeight:'100vh',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:14,background:C.beige}}>
+          <div className="spinner" style={{width:44,height:44,border:`4px solid ${C.lg}`,borderTopColor:C.blue,borderRadius:'50%'}}/>
+          <p style={{color:C.mid,fontSize:14}}>{seeding?'Inicializando datos por primera vez...':'Cargando...'}</p>
         </div>
       );
 
-      if (error) return (
-        <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:20}}>
+      if(error) return (
+        <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:20,background:C.beige}}>
           <div className="card fade-in" style={{maxWidth:480,width:'100%',padding:36,textAlign:'center'}}>
             <div style={{fontSize:48,marginBottom:12}}>⚠️</div>
-            <h2 style={{fontSize:20,fontWeight:800,color:'#E6EDF3',marginBottom:8}}>Error de conexión</h2>
-            <p style={{color:'#8B949E',fontSize:13,marginBottom:20}}>{error}</p>
+            <h2 style={{fontSize:20,fontWeight:800,color:C.blue,marginBottom:8}}>Error de conexión</h2>
+            <p style={{color:C.mid,fontSize:13,marginBottom:20}}>{error}</p>
             <button className="btn-primary" onClick={()=>{setError(null);setSetup(true);}}>Reconfigurar Supabase</button>
           </div>
         </div>
@@ -558,19 +640,20 @@
 
       return (
         <>
-          {setup && <SetupModal onSave={()=>{ setSetup(false); setLoading(true); loadData(); }} />}
-          <Navbar view={view} setView={setView} globalPct={globalPct} done={done} total={total} onConfig={()=>setSetup(true)} />
+          {setup&&<SetupModal onSave={()=>{setSetup(false);setLoading(true);loadData();}}/>}
+          {teamOpen&&<TeamModal onClose={()=>setTeamOpen(false)}/>}
+          <Navbar view={view} setView={setView} globalPct={globalPct} done={done} total={total} onConfig={()=>setSetup(true)}/>
           <div style={{maxWidth:1400,margin:'0 auto',padding:'0 24px'}}>
-            {view === 'dashboard'
-              ? <Dashboard projects={projects} tasks={tasks} getProgress={getProgress} getProjTasks={getProjTasks} setView={setView} />
-              : <TasksView projects={projects} tasks={tasks} updateTask={updateTask} getProgress={getProgress} getProjTasks={getProjTasks} />
+            {view==='dashboard'
+              ?<Dashboard projects={projects} tasks={tasks} getProgress={getProgress} getProjTasks={getProjTasks} setView={setView}/>
+              :<TasksView projects={projects} tasks={tasks} updateTask={updateTask} addTask={addTask} getProgress={getProgress} getProjTasks={getProjTasks} onOpenTeam={()=>setTeamOpen(true)}/>
             }
           </div>
         </>
       );
     }
 
-    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
   </script>
 </body>
 </html>
